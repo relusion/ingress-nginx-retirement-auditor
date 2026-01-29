@@ -1,0 +1,55 @@
+# ingress-nginx-auditor configuration file
+# Place this file in your repo root or specify with --config flag
+
+# IngressClassName values that identify ingress-nginx
+ingressClassNames:
+  - nginx
+  - nginx-internal
+  - nginx-external
+
+# Annotation prefixes that identify ingress-nginx
+annotationPrefixes:
+  - nginx.ingress.kubernetes.io/
+  - nginx.org/
+
+# Rule configuration
+rules:
+  # Explicitly enable specific rules (null = all enabled by default)
+  # enabled:
+  #   - DET-NGINX-CLASS-001
+  #   - RISK-SNIPPET-001
+
+  # Disable specific rules
+  disabled: []
+  #  - RISK-TLS-REDIRECT-001
+
+  # Override severity levels for specific rules
+  severityOverrides: {}
+  #  RISK-REGEX-001: low
+
+# Policy configuration
+policy:
+  # Minimum severity to trigger exit code 1 (policy violation)
+  # Options: info, low, medium, high, critical
+  failOn: high
+
+# Output configuration
+output:
+  # Report formats to generate
+  formats:
+    - md
+    - json
+
+  # Output directory (null = current directory)
+  outputPath: null
+
+  # Show annotation values in evidence (default: false for security)
+  showAnnotationValues: false
+
+# Cluster scan configuration
+cluster:
+  # Maximum concurrent Kubernetes API calls
+  apiConcurrency: 10
+
+  # Operation timeout in seconds
+  timeoutSeconds: 30

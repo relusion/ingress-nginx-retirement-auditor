@@ -1,0 +1,379 @@
+{
+  "$schema": "https://github.com/example/ingress-nginx-auditor/schemas/report-1.0.json",
+  "metadata": {
+    "tool": "ingress-nginx-auditor",
+    "version": "1.0.0",
+    "schemaVersion": "1.0",
+    "mode": "repo",
+    "status": "complete",
+    "timestampUtc": "2026-01-29T06:15:30.3956964+00:00",
+    "durationMs": 81.108,
+    "scannedPath": "examples/manifests"
+  },
+  "summary": {
+    "resourcesScanned": 3,
+    "ingressesScanned": 3,
+    "nginxDependentIngresses": 3,
+    "totalFindings": 10,
+    "findingsBySeverity": {
+      "info": 5,
+      "low": 0,
+      "medium": 3,
+      "high": 1,
+      "critical": 1
+    },
+    "byNamespace": {
+      "production": {
+        "ingressCount": 2,
+        "findingCount": 9,
+        "maxRiskScore": 99,
+        "bySeverity": {
+          "info": 4,
+          "critical": 1,
+          "medium": 3,
+          "high": 1,
+          "low": 0
+        }
+      },
+      "default": {
+        "ingressCount": 1,
+        "findingCount": 1,
+        "maxRiskScore": 1,
+        "bySeverity": {
+          "info": 1,
+          "low": 0,
+          "medium": 0,
+          "high": 0,
+          "critical": 0
+        }
+      }
+    },
+    "policy": {
+      "passed": false,
+      "failOnSeverity": "high",
+      "violationCount": 2,
+      "exitCode": 1
+    }
+  },
+  "findings": [
+    {
+      "id": "RISK-SNIPPET-001",
+      "title": "NGINX snippet annotations detected",
+      "severity": "critical",
+      "confidence": "high",
+      "category": "MigrationRisk",
+      "resource": {
+        "kind": "Ingress",
+        "apiVersion": "networking.k8s.io/v1",
+        "name": "legacy-api",
+        "namespace": "production"
+      },
+      "evidence": {
+        "annotations": {
+          "nginx.ingress.kubernetes.io/server-snippet": {
+            "length": 182,
+            "hashPrefix": "D684E700"
+          }
+        },
+        "matchedPatterns": [
+          "nginx.ingress.kubernetes.io/server-snippet"
+        ]
+      },
+      "message": "Ingress \u0027production/Ingress/legacy-api\u0027 uses 1 snippet annotation(s): [server-snippet] - CRITICAL migration risk",
+      "recommendations": [
+        "Document the exact NGINX directives used in each snippet",
+        "Determine if the functionality can be achieved via standard annotations",
+        "Map snippet functionality to Gateway API HTTPRoute policies where possible",
+        "Consider using an Envoy filter or Lua script as an alternative",
+        "Test thoroughly in non-production before migration"
+      ]
+    },
+    {
+      "id": "RISK-SNIPPET-001",
+      "title": "NGINX snippet annotations detected",
+      "severity": "high",
+      "confidence": "high",
+      "category": "MigrationRisk",
+      "resource": {
+        "kind": "Ingress",
+        "apiVersion": "networking.k8s.io/v1",
+        "name": "api-gateway",
+        "namespace": "production"
+      },
+      "evidence": {
+        "annotations": {
+          "nginx.ingress.kubernetes.io/configuration-snippet": {
+            "length": 123,
+            "hashPrefix": "8B077240"
+          }
+        },
+        "matchedPatterns": [
+          "nginx.ingress.kubernetes.io/configuration-snippet"
+        ]
+      },
+      "message": "Ingress \u0027production/Ingress/api-gateway\u0027 uses 1 snippet annotation(s): [configuration-snippet] - HIGH migration risk",
+      "recommendations": [
+        "Document the exact NGINX directives used in each snippet",
+        "Determine if the functionality can be achieved via standard annotations",
+        "Map snippet functionality to Gateway API HTTPRoute policies where possible",
+        "Consider using an Envoy filter or Lua script as an alternative",
+        "Test thoroughly in non-production before migration"
+      ]
+    },
+    {
+      "id": "DET-NGINX-CLASS-001",
+      "title": "NGINX IngressClass detected",
+      "severity": "info",
+      "confidence": "high",
+      "category": "Detection",
+      "resource": {
+        "kind": "Ingress",
+        "apiVersion": "networking.k8s.io/v1",
+        "name": "my-app",
+        "namespace": "default"
+      },
+      "evidence": {
+        "ingressClassName": "nginx",
+        "matchedPatterns": [
+          "spec.ingressClassName: nginx"
+        ]
+      },
+      "message": "Ingress \u0027default/Ingress/my-app\u0027 uses ingress-nginx controller via ingressClassName \u0027nginx\u0027",
+      "recommendations": [
+        "Plan migration to an alternative Ingress controller (e.g., Envoy Gateway, Istio, Traefik)",
+        "Review the ingress-nginx retirement timeline and plan accordingly",
+        "Consider using Gateway API as a future-proof alternative"
+      ]
+    },
+    {
+      "id": "DET-NGINX-ANNOT-PREFIX-001",
+      "title": "NGINX-specific annotations detected",
+      "severity": "info",
+      "confidence": "high",
+      "category": "Detection",
+      "resource": {
+        "kind": "Ingress",
+        "apiVersion": "networking.k8s.io/v1",
+        "name": "api-gateway",
+        "namespace": "production"
+      },
+      "evidence": {
+        "annotations": {
+          "nginx.ingress.kubernetes.io/configuration-snippet": {
+            "length": 123,
+            "hashPrefix": "8B077240"
+          },
+          "nginx.ingress.kubernetes.io/rewrite-target": {
+            "length": 3,
+            "hashPrefix": "EB5207B5"
+          },
+          "nginx.ingress.kubernetes.io/use-regex": {
+            "length": 4,
+            "hashPrefix": "B5BEA41B"
+          },
+          "nginx.ingress.kubernetes.io/proxy-body-size": {
+            "length": 3,
+            "hashPrefix": "FAFFA5AC"
+          },
+          "nginx.ingress.kubernetes.io/proxy-read-timeout": {
+            "length": 2,
+            "hashPrefix": "39FA9EC1"
+          }
+        }
+      },
+      "message": "Ingress \u0027production/Ingress/api-gateway\u0027 has 5 NGINX-specific annotation(s)",
+      "recommendations": [
+        "Document all NGINX-specific annotations in use",
+        "Map annotation functionality to equivalent features in target controller",
+        "Test annotation migration in a non-production environment first"
+      ]
+    },
+    {
+      "id": "DET-NGINX-CLASS-001",
+      "title": "NGINX IngressClass detected",
+      "severity": "info",
+      "confidence": "high",
+      "category": "Detection",
+      "resource": {
+        "kind": "Ingress",
+        "apiVersion": "networking.k8s.io/v1",
+        "name": "api-gateway",
+        "namespace": "production"
+      },
+      "evidence": {
+        "ingressClassName": "nginx",
+        "matchedPatterns": [
+          "spec.ingressClassName: nginx"
+        ]
+      },
+      "message": "Ingress \u0027production/Ingress/api-gateway\u0027 uses ingress-nginx controller via ingressClassName \u0027nginx\u0027",
+      "recommendations": [
+        "Plan migration to an alternative Ingress controller (e.g., Envoy Gateway, Istio, Traefik)",
+        "Review the ingress-nginx retirement timeline and plan accordingly",
+        "Consider using Gateway API as a future-proof alternative"
+      ]
+    },
+    {
+      "id": "DET-NGINX-ANNOT-PREFIX-001",
+      "title": "NGINX-specific annotations detected",
+      "severity": "info",
+      "confidence": "high",
+      "category": "Detection",
+      "resource": {
+        "kind": "Ingress",
+        "apiVersion": "networking.k8s.io/v1",
+        "name": "legacy-api",
+        "namespace": "production"
+      },
+      "evidence": {
+        "annotations": {
+          "nginx.ingress.kubernetes.io/server-snippet": {
+            "length": 182,
+            "hashPrefix": "D684E700"
+          },
+          "nginx.ingress.kubernetes.io/auth-url": {
+            "length": 31,
+            "hashPrefix": "177702D3"
+          },
+          "nginx.ingress.kubernetes.io/auth-signin": {
+            "length": 30,
+            "hashPrefix": "F1F15A68"
+          }
+        }
+      },
+      "message": "Ingress \u0027production/Ingress/legacy-api\u0027 has 3 NGINX-specific annotation(s)",
+      "recommendations": [
+        "Document all NGINX-specific annotations in use",
+        "Map annotation functionality to equivalent features in target controller",
+        "Test annotation migration in a non-production environment first"
+      ]
+    },
+    {
+      "id": "DET-NGINX-CLASS-001",
+      "title": "NGINX IngressClass detected",
+      "severity": "info",
+      "confidence": "high",
+      "category": "Detection",
+      "resource": {
+        "kind": "Ingress",
+        "apiVersion": "networking.k8s.io/v1",
+        "name": "legacy-api",
+        "namespace": "production"
+      },
+      "evidence": {
+        "ingressClassName": "nginx",
+        "matchedPatterns": [
+          "spec.ingressClassName: nginx"
+        ]
+      },
+      "message": "Ingress \u0027production/Ingress/legacy-api\u0027 uses ingress-nginx controller via ingressClassName \u0027nginx\u0027",
+      "recommendations": [
+        "Plan migration to an alternative Ingress controller (e.g., Envoy Gateway, Istio, Traefik)",
+        "Review the ingress-nginx retirement timeline and plan accordingly",
+        "Consider using Gateway API as a future-proof alternative"
+      ]
+    },
+    {
+      "id": "RISK-REGEX-001",
+      "title": "Regex path matching enabled",
+      "severity": "medium",
+      "confidence": "high",
+      "category": "MigrationRisk",
+      "resource": {
+        "kind": "Ingress",
+        "apiVersion": "networking.k8s.io/v1",
+        "name": "api-gateway",
+        "namespace": "production"
+      },
+      "evidence": {
+        "annotations": {
+          "nginx.ingress.kubernetes.io/use-regex": {
+            "length": 4,
+            "hashPrefix": "B5BEA41B"
+          }
+        },
+        "matchedPatterns": [
+          "nginx.ingress.kubernetes.io/use-regex=true"
+        ]
+      },
+      "message": "Ingress \u0027production/Ingress/api-gateway\u0027 uses regex path matching - verify patterns work with target controller",
+      "recommendations": [
+        "Document all regex patterns used in Ingress paths",
+        "Test regex patterns against target controller\u0027s regex engine",
+        "Consider simplifying patterns to prefix or exact match where possible",
+        "Gateway API HTTPRoute supports regex matching in its PathMatch"
+      ]
+    },
+    {
+      "id": "RISK-REWRITE-001",
+      "title": "URL rewrite patterns detected",
+      "severity": "medium",
+      "confidence": "high",
+      "category": "MigrationRisk",
+      "resource": {
+        "kind": "Ingress",
+        "apiVersion": "networking.k8s.io/v1",
+        "name": "api-gateway",
+        "namespace": "production"
+      },
+      "evidence": {
+        "annotations": {
+          "nginx.ingress.kubernetes.io/rewrite-target": {
+            "length": 3,
+            "hashPrefix": "EB5207B5"
+          }
+        },
+        "matchedPatterns": [
+          "rewrite-target"
+        ]
+      },
+      "message": "Ingress \u0027production/Ingress/api-gateway\u0027 uses URL rewriting - uses regex capture groups - requires careful translation",
+      "recommendations": [
+        "Document all rewrite patterns and their intended behavior",
+        "Map rewrite-target to equivalent mechanisms in target controller",
+        "Gateway API HTTPRoute supports URLRewrite filter for path modification",
+        "Test rewrite behavior thoroughly after migration"
+      ]
+    },
+    {
+      "id": "RISK-AUTH-001",
+      "title": "External authentication configuration detected",
+      "severity": "medium",
+      "confidence": "high",
+      "category": "MigrationRisk",
+      "resource": {
+        "kind": "Ingress",
+        "apiVersion": "networking.k8s.io/v1",
+        "name": "legacy-api",
+        "namespace": "production"
+      },
+      "evidence": {
+        "annotations": {
+          "nginx.ingress.kubernetes.io/auth-url": {
+            "length": 31,
+            "hashPrefix": "177702D3"
+          },
+          "nginx.ingress.kubernetes.io/auth-signin": {
+            "length": 30,
+            "hashPrefix": "F1F15A68"
+          }
+        },
+        "matchedPatterns": [
+          "Authentication type: external",
+          "auth-url",
+          "auth-signin"
+        ]
+      },
+      "message": "Ingress \u0027production/Ingress/legacy-api\u0027 uses external authentication (2 annotation(s))",
+      "recommendations": [
+        "Document the authentication flow and identity provider configuration",
+        "Verify target controller supports equivalent auth mechanisms",
+        "Consider migrating to Gateway API with ExtAuth extension",
+        "Test authentication thoroughly in staging before production migration",
+        "Ensure secrets are properly migrated if using basic auth"
+      ]
+    }
+  ],
+  "warnings": [],
+  "errors": []
+}

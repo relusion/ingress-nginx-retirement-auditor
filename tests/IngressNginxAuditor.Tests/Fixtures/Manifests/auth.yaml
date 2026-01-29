@@ -1,0 +1,23 @@
+# Triggers: RISK-AUTH-001, DET-NGINX-ANNOT-PREFIX-001, DET-NGINX-CLASS-001
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: auth-example
+  namespace: secure
+  annotations:
+    nginx.ingress.kubernetes.io/auth-url: "https://auth.example.com/verify"
+    nginx.ingress.kubernetes.io/auth-signin: "https://auth.example.com/login?rd=$escaped_request_uri"
+    nginx.ingress.kubernetes.io/auth-response-headers: "X-Auth-User,X-Auth-Roles"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: protected.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: protected-app
+            port:
+              number: 80

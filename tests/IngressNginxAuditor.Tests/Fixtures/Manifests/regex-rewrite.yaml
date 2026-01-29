@@ -1,0 +1,22 @@
+# Triggers: RISK-REGEX-001, RISK-REWRITE-001, DET-NGINX-ANNOT-PREFIX-001, DET-NGINX-CLASS-001
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: regex-rewrite-example
+  namespace: default
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: api.example.com
+    http:
+      paths:
+      - path: /api(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: api-backend
+            port:
+              number: 80

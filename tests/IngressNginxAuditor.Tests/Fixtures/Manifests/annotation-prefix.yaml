@@ -1,0 +1,23 @@
+# Triggers: DET-NGINX-ANNOT-PREFIX-001, DET-NGINX-CLASS-001
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: annotation-example
+  namespace: staging
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: upload.example.com
+    http:
+      paths:
+      - path: /upload
+        pathType: Prefix
+        backend:
+          service:
+            name: upload-service
+            port:
+              number: 8080

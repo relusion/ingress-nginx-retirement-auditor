@@ -1,0 +1,41 @@
+# Triggers multiple rules: DET-NGINX-CLASS-001, DET-NGINX-ANNOT-PREFIX-001,
+# RISK-SNIPPET-001, RISK-REWRITE-001, RISK-REGEX-001, RISK-AUTH-001
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: complex-ingress
+  namespace: production
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/auth-url: "https://auth.internal/verify"
+    nginx.ingress.kubernetes.io/auth-signin: "https://login.example.com"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header X-Request-ID $request_id;
+      proxy_set_header X-Real-IP $remote_addr;
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - api.example.com
+    secretName: api-tls
+  rules:
+  - host: api.example.com
+    http:
+      paths:
+      - path: /v1(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: api-v1
+            port:
+              number: 8080
+      - path: /v2(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: api-v2
+            port:
+              number: 8080

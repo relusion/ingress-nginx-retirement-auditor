@@ -1,0 +1,19 @@
+# Simple Ingress using nginx - Basic Detection Example
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-app
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: myapp.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: my-app-service
+            port:
+              number: 80

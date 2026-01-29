@@ -1,0 +1,35 @@
+# High-Risk Ingress - Example with snippet annotations
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-gateway
+  namespace: production
+  annotations:
+    # High-risk: Uses custom NGINX configuration
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header X-Forwarded-Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      add_header X-Frame-Options "SAMEORIGIN";
+    # Medium-risk: Uses URL rewriting
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    # Standard annotations
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - api.example.com
+    secretName: api-tls-secret
+  rules:
+  - host: api.example.com
+    http:
+      paths:
+      - path: /api(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: api-service
+            port:
+              number: 8080

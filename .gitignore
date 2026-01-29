@@ -1,0 +1,46 @@
+# .NET build output
+**/[Bb]in/
+**/[Oo]bj/
+**/[Dd]ebug*/
+**/[Rr]elease*/
+**/artifacts/
+
+# Test & coverage
+TestResults/
+.coverage
+*.coverage
+coverage*/
+*.trx
+
+# NuGet
+*.nupkg
+*.snupkg
+**/packages/
+
+# IDEs
+.vs/
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.sln.iml
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+.claude/
+spec.md

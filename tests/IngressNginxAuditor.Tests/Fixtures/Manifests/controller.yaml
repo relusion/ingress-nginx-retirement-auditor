@@ -1,0 +1,30 @@
+# Triggers: DET-NGINX-CTRL-001
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingress-nginx-controller
+  namespace: ingress-nginx
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: ingress-nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ingress-nginx
+      app.kubernetes.io/component: controller
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ingress-nginx
+        app.kubernetes.io/component: controller
+    spec:
+      containers:
+      - name: controller
+        image: registry.k8s.io/ingress-nginx/controller:v1.9.0
+        ports:
+        - name: http
+          containerPort: 80
+        - name: https
+          containerPort: 443

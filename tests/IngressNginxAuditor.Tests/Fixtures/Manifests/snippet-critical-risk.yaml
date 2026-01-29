@@ -1,0 +1,25 @@
+# Triggers: RISK-SNIPPET-001 (CRITICAL), DET-NGINX-ANNOT-PREFIX-001, DET-NGINX-CLASS-001
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: server-snippet-example
+  namespace: production
+  annotations:
+    nginx.ingress.kubernetes.io/server-snippet: |
+      location /health {
+        access_log off;
+        return 200 "OK";
+      }
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: api.example.com
+    http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: api-service
+            port:
+              number: 8080

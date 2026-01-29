@@ -1,0 +1,24 @@
+# Triggers: RISK-SNIPPET-001 (HIGH), DET-NGINX-ANNOT-PREFIX-001, DET-NGINX-CLASS-001
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: snippet-example
+  namespace: production
+  annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header X-Forwarded-Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      add_header X-Frame-Options "SAMEORIGIN";
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: secure.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: secure-app
+            port:
+              number: 443

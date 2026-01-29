@@ -1,0 +1,34 @@
+# Critical-Risk Ingress - Example with server-snippet
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: legacy-api
+  namespace: production
+  annotations:
+    # CRITICAL-risk: Server-snippet can affect entire server block
+    nginx.ingress.kubernetes.io/server-snippet: |
+      location /health {
+        access_log off;
+        return 200 "OK";
+        add_header Content-Type text/plain;
+      }
+      location /metrics {
+        access_log off;
+        proxy_pass http://prometheus-exporter:9090;
+      }
+    # Medium-risk: External authentication
+    nginx.ingress.kubernetes.io/auth-url: "https://auth.example.com/verify"
+    nginx.ingress.kubernetes.io/auth-signin: "https://auth.example.com/login"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: legacy.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: legacy-service
+            port:
+              number: 80
