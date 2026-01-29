@@ -9,6 +9,22 @@
     <AssemblyName>ingress-nginx-auditor</AssemblyName>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningLevel>9999</WarningLevel>
+
+    <!-- Package metadata -->
+    <PackageId>ingress-nginx-auditor</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Vladimir Gondarev</Authors>
+    <Description>CLI tool to audit Kubernetes clusters and repositories for ingress-nginx usage, producing actionable migration reports.</Description>
+    <PackageTags>kubernetes;ingress;nginx;audit;migration;cli</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/relusion/ingress-nginx-retirement-auditor</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/relusion/ingress-nginx-retirement-auditor</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <!-- dotnet tool packaging -->
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>ingress-nginx-auditor</ToolCommandName>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

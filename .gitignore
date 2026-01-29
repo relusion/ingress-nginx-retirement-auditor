@@ -42,5 +42,23 @@ Desktop.ini
 $RECYCLE.BIN/
 *.lnk
 
+# Claude Code
 .claude/
 spec.md
+
+# Tool output (generated reports)
+report.json
+report.md
+ingress-nginx-audit.*
+
+# Sensitive files
+*.env
+.env.*
+credentials.json
+kubeconfig
+*.pem
+*.key
+
+# Local development
+*.local
+.local/
